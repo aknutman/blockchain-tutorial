@@ -1,4 +1,5 @@
-const crypto = require("crypto"), SHA256 = message => crypto.createHash("sha256").update(message).digest("hex");
+const crypto = require("crypto"),
+    SHA256 = message => crypto.createHash("sha256").update(message).digest("hex");
 
 class Block {
     constructor(timestamp = Date.now().toString(), data = []) {
@@ -44,7 +45,7 @@ class Blockchain {
     isValid() {
         for (let i = 1; i < this.chain.length; i++) {
             const currentBlock = this.chain[i];
-            const prevBlock = this.chain[i-1];
+            const prevBlock = this.chain[i - 1];
 
             if (currentBlock.hash !== currentBlock.getHash() || prevBlock.hash !== currentBlock.prevHash) {
                 return false;
