@@ -54,7 +54,8 @@ class Block {
 
 class Blockchain {
     constructor() {
-        const initalCoinRelease = new Transaction(MINT_PUBLIC_ADDRESS, holderKeyPair.getPublic("hex"), 100000);
+        const initalCoinRelease =
+            new Transaction(MINT_PUBLIC_ADDRESS, holderKeyPair.getPublic("hex"), 100000);
         this.chain = [new Block(Date.now().toString(), [initalCoinRelease])];
         this.difficulty = 1;
         this.blockTime = 30000;
@@ -112,7 +113,9 @@ class Blockchain {
         rewardTransaction.sign(MINT_KEY_PAIR);
 
         // Prevent people from minting coins and mine the minting transaction.
-        if (this.transactions.length !== 0) this.addBlock(new Block(Date.now().toString(), [rewardTransaction, ...this.transactions]));
+        if (this.transactions.length !== 0) {
+            this.addBlock(new Block(Date.now().toString(), [rewardTransaction, ...this.transactions]));
+        }
 
         this.transactions = [];
     }
@@ -146,7 +149,8 @@ class Transaction {
     sign(keyPair) {
         if (keyPair.getPublic("hex") === this.from) {
             // Add gas
-            this.signature = keyPair.sign(SHA256(this.from + this.to + this.amount + this.gas), "base64").toDER("hex");
+            this.signature =
+                keyPair.sign(SHA256(this.from + this.to + this.amount + this.gas), "base64").toDER("hex");
         }
     }
 
@@ -156,8 +160,14 @@ class Transaction {
             tx.to &&
             tx.amount &&
             // Add gas
-            (chain.getBalance(tx.from) >= tx.amount + tx.gas || tx.from === MINT_PUBLIC_ADDRESS && tx.amount === chain.reward) &&
-            ec.keyFromPublic(tx.from, "hex").verify(SHA256(tx.from + tx.to + tx.amount + tx.gas), tx.signature)
+            (
+                chain.getBalance(tx.from) >= tx.amount + tx.gas ||
+                tx.from === MINT_PUBLIC_ADDRESS && tx.amount === chain.reward
+            ) &&
+            ec.keyFromPublic(tx.from, "hex").verify(
+                SHA256(tx.from + tx.to + tx.amount + tx.gas),
+                tx.signature
+            )
         );
     }
 }
@@ -167,7 +177,8 @@ const JeChain = new Blockchain();
 const girlfriendWallet = ec.genKeyPair();
 
 // Create a transaction
-const transaction = new Transaction(holderKeyPair.getPublic("hex"), girlfriendWallet.getPublic("hex"), 100, 10);
+const transaction =
+    new Transaction(holderKeyPair.getPublic("hex"), girlfriendWallet.getPublic("hex"), 100, 10);
 // Sign the transaction
 transaction.sign(holderKeyPair);
 // Add transaction to pool
