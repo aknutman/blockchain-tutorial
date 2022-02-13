@@ -11,7 +11,12 @@ class Block {
     }
 
     getHash() {
-        return SHA256(this.prevHash + this.timestamp + JSON.stringify(this.data) + this.nonce);
+        return SHA256(
+            this.prevHash +
+            this.timestamp +
+            JSON.stringify(this.data) +
+            this.nonce
+        );
     }
 
     mine(difficulty) {
@@ -39,7 +44,10 @@ class Blockchain {
         block.mine(this.difficulty);
         this.chain.push(Object.freeze(block));
 
-        this.difficulty += Date.now() - parseInt(this.getLastBlock().timestamp) < this.blockTime ? 1 : -1;
+        this.difficulty +=
+            Date.now() - parseInt(this.getLastBlock().timestamp) < this.blockTime ?
+            1 :
+            -1;
     }
 
     isValid() {
@@ -47,7 +55,10 @@ class Blockchain {
             const currentBlock = this.chain[i];
             const prevBlock = this.chain[i - 1];
 
-            if (currentBlock.hash !== currentBlock.getHash() || prevBlock.hash !== currentBlock.prevHash) {
+            if (
+                currentBlock.hash !== currentBlock.getHash() ||
+                prevBlock.hash !== currentBlock.prevHash
+            ) {
                 return false;
             }
         }
